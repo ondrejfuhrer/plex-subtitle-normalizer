@@ -8,8 +8,12 @@ fi
 chmod +x "$TARGET_FILE"
 
 SETTINGS_FILE=".settings"
-if [ ! -e "$SETTINGS_FILE" ]
+if [ -e "$SETTINGS_FILE" ]
 then
-	read -p "Please enter your library directory (script cannot be used outside): " d
-	echo "library_root: $d" > "$SETTINGS_FILE"
+	rm "$SETTINGS_FILE"
 fi
+
+read -p "Please enter your library directory (used as root directory for scanning): " d
+echo "library_root: $d" > "$SETTINGS_FILE"
+echo "log_level: 2" >> "$SETTINGS_FILE"
+echo 'backup_directory_name: "_Subtitles"' >> "$SETTINGS_FILE"
