@@ -39,6 +39,7 @@ do
 		if [ "srt" == "$extension" ];
 		then
 			file_to_rename="$file"
+			from_charset=$(enca -L czech -i $file)
 			__log "File set to rename" $LOG_DEBUG
 		else
 			base_name="${file%.*}"
@@ -49,10 +50,17 @@ do
 	if [ -e "$file_to_rename" ]
 	then
 		new_filename="$base_name.cze.srt"
-		iconv -f windows-1250 -t utf-8 < $file_to_rename > $new_filename
+		if [ "UTF-8" == $from_charset ]
+		then
+			__log "Subtitle already in UTF-8, skipping iconv" $LOG_DEBUG
+			cp $file_to_rename $new_filename
+		else 
+			__log "Changing encoding for the subtitle file from $from_charset" $LOG_DEBUG
+			iconv -f windows-1250 -t utf-8 < $file_to_rename > $new_filename
+		fi
 		__log "Created new subtitle file: $new_filename"
 	else
-		__log "No subtitle file found for normalising"
+		__log "$directory: No subtitle file found for normalizing"
 	fi
 	__log '' $LOG_DEBUG
 done
