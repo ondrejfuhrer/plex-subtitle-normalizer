@@ -2,7 +2,7 @@
 OIFS="$IFS"
 IFS=$'\n'
 
-if [ ! -e './.settings' ]
+if [ ! -e '.settings' ]
 then
 	echo 'Settings not found, please run install.sh.'
 	exit
@@ -18,7 +18,7 @@ for directory in `find $setting_library_root -type d`
 do
 	__log "Folder: $directory" $LOG_DEBUG
 	
-	if [ "." == "$directory" ];
+	if [ "$setting_library_root" == "$directory" ];
 	then
 		__log 'Skipping root directory' $LOG_DEBUG
 		__log '' $LOG_DEBUG
