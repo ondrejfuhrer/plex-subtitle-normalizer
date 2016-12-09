@@ -1,5 +1,7 @@
 #!/bin/bash
-parse_settings() {
+CONFIG_FILE='.settings'
+
+parse_config_file() {
    local prefix=$2
    local s='[[:space:]]*' w='[a-zA-Z0-9_]*' fs=$(echo @|tr @ '\034')
    sed -ne "s|^\($s\)\($w\)$s:$s\"\(.*\)\"$s\$|\1$fs\2$fs\3|p" \
@@ -13,4 +15,19 @@ parse_settings() {
          printf("%s%s%s=\"%s\"\n", "'$prefix'",vn, $2, $3);
       }
    }'
+}
+
+check_config_exists()
+{
+	if [ ! -e "$CONFIG_FILE" ]
+	then
+		echo 'Config file not found, please run install.sh.'
+		exit
+	fi
+}
+
+load_config()
+{
+	check_config_exists
+	eval $(parse_config_file "$CONFIG_FILE" 'config_')
 }

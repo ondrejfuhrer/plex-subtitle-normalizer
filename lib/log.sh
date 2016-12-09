@@ -8,7 +8,7 @@ __log()
 {
 	LEVEL=${2:-2}
 	
-	if [ "$LEVEL" -lt "$setting_log_level" ]
+	if [ "$LEVEL" -lt "$config_log_level" ]
 	then
 		return
 	fi
