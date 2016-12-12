@@ -25,6 +25,10 @@ do
 		continue
 	fi
 	
+	file_to_rename=''
+	from_charset=''
+	base_name=''
+	
 	for file in `find $directory -type f -name "*.*"`
 	do
 		__log "Testing file: $file" $LOG_DEBUG
@@ -44,6 +48,11 @@ do
 	if [ -e "$file_to_rename" ]
 	then
 		new_filename="$base_name.$config_subtitle_lang.$subtitle_extension"
+		if [ -e "$new_filename" ]
+		then
+			__log "File already exists, skipping"
+			continue
+		fi
 		if [ "UTF-8" == $from_charset ]
 		then
 			__log "Subtitle already in UTF-8, skipping iconv" $LOG_DEBUG
@@ -53,6 +62,7 @@ do
 			iconv -f windows-1250 -t utf-8 < $file_to_rename > $new_filename
 		fi
 		__log "New file: $new_filename from $file_to_rename"
+		mv "$file_to_rename" "$file_to_rename.bck"
 	else
 		__log "$directory: No subtitle file found for normalizing"
 	fi
