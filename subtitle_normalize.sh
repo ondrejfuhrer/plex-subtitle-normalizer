@@ -7,43 +7,58 @@ IFS=$'\n'
 
 load_config
 
-for directory in `find $config_library_root -type d`
+function lookup_subtitle_file_details()
+{
+	file_to_rename=''
+	from_charset=''
+	base_name=''
+	
+	for file in `find $1 -type f -name "*.*"`
+	do
+		__log "Testing file: $file"
+		local extension=${file##*.}
+		if [ "srt" == "$extension" ];
+		then
+			file_to_rename="$file"
+			from_charset=$(enca -L $config_enca_lang -i $file)
+			subtitle_extension="$extension"
+			__log "File set to rename"
+		else
+			base_name="${file%.*}"
+			__log "Used for base file name"
+		fi
+	done
+}
+
+function load_directories()
+{
+	for directory in `find $config_library_root -type d`
+	do
+		directories=( "${directories[@]}" "$directory" )
+	done
+}
+
+load_directories
+
+for directory in "${directories[@]}"
 do
-	__log "Folder: $directory" $LOG_DEBUG
+	__log "Folder: $directory"
 	
 	if [ "$config_library_root" == "$directory" ];
 	then
-		__log 'Skipping root directory' $LOG_DEBUG
-		__log '' $LOG_DEBUG
+		__log 'Skipping root directory'
+		__log ''
 		continue;
 	fi
 	
 	if [[ $directory == *"$config_backup_directory_name" ]]
 	then 
-		__log "Skipping backup directory" $LOG_DEBUG
-		__log '' $LOG_DEBUG
+		__log "Skipping backup directory"
+		__log ''
 		continue
 	fi
 	
-	file_to_rename=''
-	from_charset=''
-	base_name=''
-	
-	for file in `find $directory -type f -name "*.*"`
-	do
-		__log "Testing file: $file" $LOG_DEBUG
-		extension=${file##*.}
-		if [ "srt" == "$extension" ];
-		then
-			file_to_rename="$file"
-			from_charset=$(enca -L czech -i $file)
-			subtitle_extension="$extension"
-			__log "File set to rename" $LOG_DEBUG
-		else
-			base_name="${file%.*}"
-			__log "Used for base file name" $LOG_DEBUG
-		fi
-	done
+	lookup_subtitle_file_details $directory
 	
 	if [ -e "$file_to_rename" ]
 	then
@@ -55,17 +70,17 @@ do
 		fi
 		if [ "UTF-8" == $from_charset ]
 		then
-			__log "Subtitle already in UTF-8, skipping iconv" $LOG_DEBUG
+			__log "Subtitle already in UTF-8, skipping iconv"
 			cp $file_to_rename $new_filename
 		else 
-			__log "Changing encoding for the subtitle file from $from_charset" $LOG_DEBUG
-			iconv -f windows-1250 -t utf-8 < $file_to_rename > $new_filename
+			__log "Changing encoding for the subtitle file from $from_charset"
+			iconv -f $from_charset -t utf-8 < $file_to_rename > $new_filename
 		fi
-		__log "New file: $new_filename from $file_to_rename"
+		__log "New file: $new_filename from $file_to_rename" $LOG_INFO
 		mv "$file_to_rename" "$file_to_rename.bck"
 	else
 		__log "$directory: No subtitle file found for normalizing"
 	fi
-	__log '' $LOG_DEBUG
+	__log ''
 done
 IFS="$OIFS"

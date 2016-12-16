@@ -6,7 +6,7 @@ LOG_ERROR=4
 
 __log()
 {
-	LEVEL=${2:-2}
+	LEVEL=${2:-1}
 	
 	if [ "$LEVEL" -lt "$config_log_level" ]
 	then
