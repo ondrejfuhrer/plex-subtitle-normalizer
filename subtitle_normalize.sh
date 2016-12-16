@@ -7,6 +7,19 @@ IFS=$'\n'
 
 load_config
 
+if [ "revert" == "$1" ]
+then
+	__log 'Reverting changes' $LOG_INFO
+	find $config_library_root -type f -name "*.$config_subtitle_lang.???" -exec rm {} \;
+	for bck_file in `find $config_library_root -type f -name "*.bck"`
+	do
+		length=${#bck_file}-4
+		target=${bck_file:0:$length}
+		mv $bck_file $target
+	done
+	exit
+fi
+
 function lookup_subtitle_file_details()
 {
 	file_to_rename=''
