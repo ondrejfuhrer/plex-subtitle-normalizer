@@ -13,11 +13,12 @@ mkdir "$INSTALL_DIR/lib"
 cp ./lib/* "$INSTALL_DIR/lib"
 cp ./subtitle_normalize.sh "$INSTALL_DIR"
 
-if [ ! -e "$target_file" ]
+if [ -e "$target_file" ]
 then
-	ln $install_dir/subtitle_normalize.sh $target_file
+	rm $target_file
 fi
 
+ln $INSTALL_DIR/subtitle_normalize.sh $target_file
 chmod +x $target_file
 
-sh setup.sh
+sh setup.sh $1

@@ -33,7 +33,7 @@ function lookup_subtitle_file_details()
 	from_charset=''
 	base_name=''
 	
-	for file in `find $1 -type f -name "*.*"`
+	for file in `find $1 -type f -depth 1 -name "*.*"`
 	do
 		__log "Testing file: $file"
 		local extension=${file##*.}
@@ -55,22 +55,23 @@ function lookup_subtitle_file_details()
 
 function load_directories()
 {
-	for directory in `find $1 -type d`
-	do
-		directories=( "${directories[@]}" "$directory" )
-	done
+	echo '('; 
+	find "$1" -type d -exec stat -f '"%N"' {} \;; 
+	echo ')';
 }
 
-load_directories "$config_library_root"
+__log "Library root: $config_library_root" $LOG_INFO
+
+declare -a directories=$(load_directories "$config_library_root")
 
 for directory in "${directories[@]}"
 do
+	__log ''
 	__log "Folder: $directory"
 	
 	if [ "$config_library_root" == "$directory" ];
 	then
 		__log 'Skipping root directory'
-		__log ''
 		continue;
 	fi
 	
@@ -78,6 +79,13 @@ do
 	
 	if [ -e "$file_to_rename" ]
 	then
+		if [[ -z "${base_name// }" ]]
+		then
+			__log "No media file found, skipping"
+			continue
+		else
+			__log "Base name: $base_name"
+		fi
 		new_filename="$base_name.$config_subtitle_lang.$subtitle_extension"
 		if [ -e "$new_filename" ]
 		then
@@ -98,15 +106,14 @@ do
 				iconv -f $from_charset -t utf-8 < $file_to_rename > $new_filename
 			fi
 		fi
-		__log "New file: $new_filename from $file_to_rename" $LOG_INFO
 		if [ "$config_debug" == "0" ]
 		then
 			mv "$file_to_rename" "$file_to_rename.bck"
 		fi
+		__log "New file: ${new_filename#$config_library_root} from ${file_to_rename#$config_library_root}" $LOG_INFO
 	else
 		__log "$directory: No subtitle file found for normalizing"
 	fi
-	__log ''
 done
 
 if [ "$config_debug" == "1" ]

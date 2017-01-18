@@ -6,7 +6,12 @@ then
 	rm "$CONFIG_FILE"
 fi
 
-read -p "Please enter your library directory (used as root directory for scanning): " d
+if [[ -z "${1// }" ]]
+then
+	read -p "Please enter your library directory (used as root directory for scanning): " d
+else
+	d=$1
+fi
 echo "library_root: $d" > "$CONFIG_FILE"
 echo "log_level: 2" >> "$CONFIG_FILE"
 echo "subtitle_lang: cze" >> "$CONFIG_FILE"
