@@ -1,5 +1,6 @@
 #!/bin/bash
-CONFIG_FILE='.settings'
+INSTALL_DIR="/Users/$(whoami)/.plex_subtitle_normalizer"
+CONFIG_FILE="$INSTALL_DIR/.settings"
 
 parse_config_file() {
    local prefix=$2

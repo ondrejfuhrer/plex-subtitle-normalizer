@@ -1,10 +1,23 @@
 #!/bin/bash
-TARGET_FILE=/usr/local/bin/subtitle_normalize
-if [ ! -e "$TARGET_FILE" ]
+. lib/config.sh
+target_file=/usr/local/bin/subtitle_normalize
+
+if [ -e "$INSTALL_DIR" ]
 then
-	ln ./subtitle_normalize.sh "$TARGET_FILE"
+	rm -rf $INSTALL_DIR
 fi
 
-chmod +x "$TARGET_FILE"
+mkdir $INSTALL_DIR
+mkdir "$INSTALL_DIR/lib"
+
+cp ./lib/* "$INSTALL_DIR/lib"
+cp ./subtitle_normalize.sh "$INSTALL_DIR"
+
+if [ ! -e "$target_file" ]
+then
+	ln $install_dir/subtitle_normalize.sh $target_file
+fi
+
+chmod +x $target_file
 
 sh setup.sh
