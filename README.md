@@ -29,5 +29,5 @@ Currently the encoding for the enca command is set to `czech` during the install
 
 Your setting file location will be:
 ```
-/Users/current_user/.plex_media_normalizer/.settings
+/Users/current_user/.plex_subtitle_normalizer/.settings
 ```
