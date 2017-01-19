@@ -31,3 +31,35 @@ Your setting file location will be:
 ```
 /Users/current_user/.plex_subtitle_normalizer/.settings
 ```
+
+# Usage
+After the installation you wil have following command available
+```
+subtitle_normalize
+```
+
+This will run the normalization procedure on your whole library. It will create a backup of all your current subtitles as `*.bck` file. The precondition is, that in the directory there needs to be just the media file and a subtitle file. When other files are involved, the result is not guaranteed.
+
+Currently there are two other options available
+
+```
+subtitle_normalize info
+```
+This info argument will print a basic info about your library like:
+```
+Library informations
+Library root: /Users/current_user/Movies/
+
+[Media files]: 125
+[Subtitles]: 122
+[Missing subtitles]:
+1: /Test/Serie 1
+2: /Test/Serie 3
+3: /Test/Serie 5/Serie 5 s01e03
+```
+
+Then there is a simple way of reverting the changes you made by the script.
+**Important:** The revert command is designed right now just for a development purpose so the result is not guaranteed on your directory structure, so if you are not sure about that, do not run it.
+```
+subtitle_normalize revert
+```
