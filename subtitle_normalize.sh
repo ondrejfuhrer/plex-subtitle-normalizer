@@ -46,6 +46,9 @@ function lookup_subtitle_file_details()
 		elif [ "bck" == "$extension" ]
 		then
 			__log "Skipping backup file" 
+		elif [ "DS_Store" == "$extension" ]
+		then
+			__log "Skipping .DS_Store file"
 		else
 			base_name="${file%.*}"
 			__log "Used for base file name"
@@ -60,9 +63,20 @@ function load_directories()
 	echo ')';
 }
 
-__log "Library root: $config_library_root" $LOG_INFO
+if [ "info" == "$1" ]
+then
+	echo "Library informations"
+	echo "Library root: $config_library_root"
+	echo ''
+else
+	__log "Library root: $config_library_root" $LOG_INFO	
+fi
 
 declare -a directories=$(load_directories "$config_library_root")
+
+stats_subtitles=0
+stats_media=0
+missing_subtitles=()
 
 for directory in "${directories[@]}"
 do
@@ -76,6 +90,25 @@ do
 	fi
 	
 	lookup_subtitle_file_details $directory
+
+	if [ "info" == "$1" ] 
+	then
+		if [ -e "$file_to_rename" ]
+		then
+			stats_subtitles=$[$stats_subtitles +1]
+		fi
+
+		if [[ -n "${base_name// }" ]]
+		then
+			stats_media=$[$stats_media +1]
+			if [[ -z "${file_to_rename// }" ]]
+			then
+				missing_subtitles+=("$directory")
+			fi
+		fi
+
+		continue
+	fi
 	
 	if [ -e "$file_to_rename" ]
 	then
@@ -115,6 +148,19 @@ do
 		__log "$directory: No subtitle file found for normalizing"
 	fi
 done
+
+if [ "info" == "$1" ]
+then
+	echo "[Media files]: $stats_media"
+	echo "[Subtitles]: $stats_subtitles"
+	echo "[Missing subtitles]:"
+	c=0
+	for directory in "${missing_subtitles[@]}"
+	do
+		c=$[$c +1]
+		echo "$c: ${directory#$config_library_root}"
+	done
+fi
 
 if [ "$config_debug" == "1" ]
 then
