@@ -103,7 +103,18 @@ do
 			stats_media=$[$stats_media +1]
 			if [[ -z "${file_to_rename// }" ]]
 			then
-				missing_subtitles+=("$directory")
+				directory=${directory#$config_library_root}
+				directory=${directory#/}
+				if [ "$2" == "verbose" ]
+				then
+					missing_subtitles+=("$directory")
+				else
+					value=${directory%%/*}
+					if [[ ! " ${missing_subtitles[@]} " =~ " ${value} " ]]; 
+					then
+						missing_subtitles+=("$value")		
+					fi
+				fi
 			fi
 		fi
 
@@ -158,7 +169,7 @@ then
 	for directory in "${missing_subtitles[@]}"
 	do
 		c=$[$c +1]
-		echo "$c: ${directory#$config_library_root}"
+		echo "$c: $directory"
 	done
 fi
 
