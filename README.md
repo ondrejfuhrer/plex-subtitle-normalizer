@@ -47,7 +47,7 @@ subtitle_normalize info
 ```
 This info argument will print a basic info about your library like:
 ```
-Library informations
+Library information
 Library root: /Users/current_user/Movies/
 
 [Media files]: 125
@@ -58,9 +58,9 @@ Library root: /Users/current_user/Movies/
 3: Serie 5
 ```
 
-If you specify `verbose` for the previous command (meaning `subtitle_normalize info verbose`) then all the episode folders will be mentioned in the `Missing subtitles section`:
+If you specify `verbose` for the previous command (meaning `subtitle_normalize info verbose`) then all the episode folders will be mentioned in the `[Missing subtitles]` section:
 ```
-Library informations
+Library information
 Library root: /Users/current_user/Movies/
 
 [Media files]: 125
@@ -74,6 +74,7 @@ Library root: /Users/current_user/Movies/
 
 
 Then there is a simple way of reverting the changes you made by the script.
+
 **Important:** The revert command is designed right now just for a development purpose so the result is not guaranteed on your directory structure, so if you are not sure about that, do not run it.
 ```
 subtitle_normalize revert
