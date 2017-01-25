@@ -53,10 +53,25 @@ Library root: /Users/current_user/Movies/
 [Media files]: 125
 [Subtitles]: 122
 [Missing subtitles]:
-1: /Test/Serie 1
-2: /Test/Serie 3
-3: /Test/Serie 5/Serie 5 s01e03
+1: Serie 1
+2: Serie 3
+3: Serie 5
 ```
+
+If you specify `verbose` for the previous command (meaning `subtitle_normalize info verbose`) then all the episode folders will be mentioned in the `Missing subtitles section`:
+```
+Library informations
+Library root: /Users/current_user/Movies/
+
+[Media files]: 125
+[Subtitles]: 121
+[Missing subtitles]:
+1: /Test/Serie 1/Serie 1 s01e01
+2: /Test/Serie 3/Serie 3 s01e03
+3: /Test/Serie 5/Serie 5 s01e01
+4: /Test/Serie 5/Serie 5 s01e02
+```
+
 
 Then there is a simple way of reverting the changes you made by the script.
 **Important:** The revert command is designed right now just for a development purpose so the result is not guaranteed on your directory structure, so if you are not sure about that, do not run it.
