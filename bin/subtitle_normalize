@@ -6,7 +6,8 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 if [ "setup" == "$1" ]
 then
-	sh "$DIR/setup.sh"
+	real_path=$(readlink /usr/local/bin/subtitle_normalize)
+	sh "$real_path/setup.sh"
 	exit
 fi
 
