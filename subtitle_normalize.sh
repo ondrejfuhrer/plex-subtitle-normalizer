@@ -65,7 +65,7 @@ function load_directories()
 
 if [ "info" == "$1" ]
 then
-	echo "Library informations"
+	echo "Library information"
 	echo "Library root: $config_library_root"
 	echo ''
 else
