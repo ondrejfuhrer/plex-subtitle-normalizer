@@ -14,6 +14,12 @@ source "$PLEX_NORM_APP_DIR"/lib/config.sh
 
 load_config
 
+if [ "help" == "$1" ]
+then
+	__log 'Subtitle normalizer help.' $LOG_INFO
+	exit
+fi
+
 if [ "revert" == "$1" ]
 then
 	__log 'Reverting changes' $LOG_INFO
