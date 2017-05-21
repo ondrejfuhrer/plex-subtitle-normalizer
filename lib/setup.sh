@@ -1,6 +1,6 @@
 #!/bin/bash
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-. "$DIR/lib/config.sh"
+. "$DIR/config.sh"
 
 if [ -e "$CONFIG_FILE" ]
 then

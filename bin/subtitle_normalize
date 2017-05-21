@@ -2,10 +2,17 @@
 OIFS="$IFS"
 IFS=$'\n'
 PLEX_NORM_APP_DIR="/Users/$(whoami)/.plex_subtitle_normalizer"
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-if [ ! -f "$PLEX_NORM_APP_DIR/lib/log.sh" ]
+if [ "setup" == "$1" ]
 then
-	echo 'App not installed properly. Please use `sh install.sh` from the download directory'
+	sh "$DIR/setup.sh"
+	exit
+fi
+
+if [ ! -f "$PLEX_NORM_APP_DIR/." ]
+then
+	echo 'App not installed properly. Please use `subtitle_normalize setup` from the download directory'
 	exit
 fi
 
