@@ -1,5 +1,5 @@
 #!/bin/bash
-. lib/config.sh
+. ./lib/config.sh
 
 if [ -e "$CONFIG_FILE" ]
 then
