@@ -26,7 +26,7 @@ then
 fi
 
 # check if the configuration has been already done
-if [ ! -f "$PLEX_NORM_APP_DIR/.config" ]
+if [ ! -f "$PLEX_NORM_APP_DIR/config.yml" ]
 then
 	echo 'App not installed properly. Please use `subtitle_normalize setup` from the download directory'
 	exit
@@ -54,6 +54,12 @@ then
 	exit
 fi
 
+declare -a directories=$(load_directories "$config_library_root")
+
+stats_subtitles=0
+stats_media=0
+missing_subtitles=()
+
 if [ "info" == "$1" ]
 then
 	echo "Library information"
@@ -62,12 +68,6 @@ then
 else
 	__log "Library root: $config_library_root" $LOG_INFO	
 fi
-
-declare -a directories=$(load_directories "$config_library_root")
-
-stats_subtitles=0
-stats_media=0
-missing_subtitles=()
 
 for directory in "${directories[@]}"
 do
