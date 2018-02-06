@@ -3,23 +3,29 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 . "$DIR/config.sh"
 target_file=/usr/local/bin/subtitle_normalize
 
+# remove installation dir if exists
 if [ -e "$INSTALL_DIR" ]
 then
 	rm -rf $INSTALL_DIR
 fi
 
-mkdir $INSTALL_DIR
+# create installation directories
+mkdir "$INSTALL_DIR"
 mkdir "$INSTALL_DIR/lib"
 
-cp "$DIR/lib/* '$INSTALL_DIR/lib'"
-cp "$DIR/subtitle_normalize '$INSTALL_DIR'"
+# copy the lib folder to 
+cp -R "$DIR" "$INSTALL_DIR"
+cp "$DIR/../bin/subtitle_normalize" "$INSTALL_DIR"
 
+# remove existing symlink if exists
 if [ -e "$target_file" ]
 then
 	rm $target_file
 fi
 
-ln $INSTALL_DIR/subtitle_normalize $target_file
-chmod +x $target_file
+# create new symlink
+ln -s $INSTALL_DIR/subtitle_normalize $target_file
+#chmod +x $target_file
 
-sh setup.sh $1
+# run setup
+sh $DIR/setup.sh $1

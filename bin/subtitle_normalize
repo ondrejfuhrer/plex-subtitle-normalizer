@@ -7,11 +7,12 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 if [ "setup" == "$1" ]
 then
 	real_path=$(readlink /usr/local/bin/subtitle_normalize)
-	sh "$DIR/$real_path/setup.sh"
+	real_path=$(dirname "$real_path")
+	sh "$real_path/lib/setup.sh"
 	exit
 fi
 
-if [ ! -f "$PLEX_NORM_APP_DIR/." ]
+if [ ! -f "$PLEX_NORM_APP_DIR/.config" ]
 then
 	echo 'App not installed properly. Please use `subtitle_normalize setup` from the download directory'
 	exit
