@@ -4,6 +4,19 @@ IFS=$'\n'
 PLEX_NORM_APP_DIR="/Users/$(whoami)/.plex_subtitle_normalizer"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+# provide help
+if [ "help" == "$1" ]
+then
+	echo 'Subtitle normalizer help.'
+	echo "Usage: subtitle_normalize [help|info|setup|revert]"
+	echo "  help:   Provides this help"
+	echo "  info:   Prints info about the library state"
+	echo "  setup:  Setup a new config for the script. Accepts library root as a first argument, otherwise will ask for it"
+	echo "  revert: Reverts the changes done by the script. THIS IS EXPERIMENTAL FEATURE, ALL FILES COULD BE LOST!"
+	exit
+fi
+
+# runs setup
 if [ "setup" == "$1" ]
 then
 	real_path=$(readlink /usr/local/bin/subtitle_normalize)
@@ -12,23 +25,22 @@ then
 	exit
 fi
 
+# check if the configuration has been already done
 if [ ! -f "$PLEX_NORM_APP_DIR/.config" ]
 then
 	echo 'App not installed properly. Please use `subtitle_normalize setup` from the download directory'
 	exit
 fi
 
+# load necessary files
 source "$PLEX_NORM_APP_DIR"/lib/log.sh
 source "$PLEX_NORM_APP_DIR"/lib/config.sh
+source "$PLEX_NORM_APP_DIR"/lib/functions.sh
 
+# load the configuration to $CONFIG_* variables
 load_config
 
-if [ "help" == "$1" ]
-then
-	__log 'Subtitle normalizer help.' $LOG_INFO
-	exit
-fi
-
+# revert all the changes if necessary
 if [ "revert" == "$1" ]
 then
 	__log 'Reverting changes' $LOG_INFO
@@ -41,42 +53,6 @@ then
 	done
 	exit
 fi
-
-function lookup_subtitle_file_details()
-{
-	file_to_rename=''
-	from_charset=''
-	base_name=''
-	
-	for file in `find $1 -type f -depth 1 -name "*.*"`
-	do
-		__log "Testing file: $file"
-		local extension=${file##*.}
-		if [ "srt" == "$extension" ];
-		then
-			file_to_rename="$file"
-			from_charset=$(enca -L $config_enca_lang -i $file)
-			subtitle_extension="$extension"
-			__log "File set to rename"
-		elif [ "bck" == "$extension" ]
-		then
-			__log "Skipping backup file" 
-		elif [ "DS_Store" == "$extension" ]
-		then
-			__log "Skipping .DS_Store file"
-		else
-			base_name="${file%.*}"
-			__log "Used for base file name"
-		fi
-	done
-}
-
-function load_directories()
-{
-	echo '('; 
-	find "$1" -type d -exec stat -f '"%N"' {} \;; 
-	echo ')';
-}
 
 if [ "info" == "$1" ]
 then

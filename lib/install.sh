@@ -1,7 +1,6 @@
 #!/bin/bash
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 . "$DIR/config.sh"
-target_file=/usr/local/bin/subtitle_normalize
 
 # remove installation dir if exists
 if [ -e "$INSTALL_DIR" ]
@@ -18,14 +17,13 @@ cp -R "$DIR" "$INSTALL_DIR"
 cp "$DIR/../bin/subtitle_normalize" "$INSTALL_DIR"
 
 # remove existing symlink if exists
-if [ -e "$target_file" ]
+if [ -e "$BIN_FILE" ]
 then
-	rm $target_file
+	rm $BIN_FILE
 fi
 
 # create new symlink
-ln -s $INSTALL_DIR/subtitle_normalize $target_file
-#chmod +x $target_file
+ln -s $INSTALL_DIR/subtitle_normalize $BIN_FILE
 
 # run setup
 sh $DIR/setup.sh $1
