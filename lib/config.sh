@@ -1,6 +1,6 @@
 #!/bin/bash
 INSTALL_DIR="/Users/$(whoami)/.plex_subtitle_normalizer"
-CONFIG_FILE="$INSTALL_DIR/.config"
+CONFIG_FILE="$INSTALL_DIR/config.yml"
 BIN_FILE=/usr/local/bin/subtitle_normalize
 
 parse_config_file() {
